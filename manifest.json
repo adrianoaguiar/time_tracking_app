@@ -1,18 +1,22 @@
 {
     "author": {
-	"name" :"Skip Moore",
-	"email": "skip.moore@zendesk.com"
+	"name" :"Skip Moore/ Pierre Nespo",
+	"email": "skip.moore@zendesk.com, pierre.nespo@gmail.com"
     },
-    "parameters": [{
-        "name": "totaltime",
-        "type": "text",
-        "required": true
-    },
-                   {
-                       "name": "timehistory",
-                       "type": "text",
-                       "required": true
-                   }],
+
+    "parameters": [
+        {
+            "name": "totaltime",
+            "type": "text",
+            "required": true
+        },
+        {
+            "name": "timehistory",
+            "type": "text",
+            "required": true
+        }
+    ],
+
     "frameworkVersion": "0.5",
     "location":"ticket_sidebar",
     "defaultLocale": "en",
