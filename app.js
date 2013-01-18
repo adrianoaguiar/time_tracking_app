@@ -49,6 +49,7 @@
         submit: function(event){
             event.preventDefault();
             this.addTime();
+            this.enableSave();
         },
 
         setTimeLoop: function(self){
@@ -56,20 +57,34 @@
                 if (_.isEmpty(self.$('#add_time'))){
                     clearInterval(self.timeLoopID);
                 } else {
-                    var elapsedTime = self._msToHuman(new Date() - self.startedTime);
+                    var ms = self.setWorkedTime();
 
-                    self.$('#add_time').val(elapsedTime.hours + ':' +
-                                            (elapsedTime.minutes == '00' ? '01' : elapsedTime.minutes));
+                    if (ms > 15000 &&
+                        _.isUndefined(self.thresholdReached)){
+                        self.disableSave();
+                        self.$('#time-tracker-submit').show();
+                        self.thresholdReached = true;
+                    }
                 }
-            }, 2000);
+            }, 5000);
+        },
+
+        // Returns worded time as ms
+        setWorkedTime: function(){
+            var ms = this._elapsedTime();
+            var elapsedTime = this._msToHuman(ms);
+
+            this.$('#add_time').val(this._prettyTime(elapsedTime));
+
+            return ms;
         },
 
         haveRequester: function() {
             var timeField = displayTime.call(this);
             var historyField = displayHistory.call(this);
             var requesterEmail = this.ticket().id() && this.ticket().requester().email();
+
             if ( _.isEmpty(requesterEmail)) { return; }
-            this.disableSave();
 
             this.loadedValue = this.ticket().customField('custom_field_' + timeField +'');
             this.loadedHistory = this.ticket().customField('custom_field_' + historyField +'') || '';
@@ -77,8 +92,20 @@
                 validation: this.timeRegex
             });
 
+            this.setDefaults();
+        },
+
+        setDefaults: function(){
             if (_.isEmpty(this.$('#add_date').val()))
                 this.$("#add_date").val(new Date().toJSON().substring(0,10));
+
+            this.setWorkedTime();
+
+            if (_.isUndefined(this.thresholdReached)){
+                this.$('#time-tracker-submit').hide();
+            } else{
+                this.$('#time-tracker-submit').show();
+            }
         },
         addTime: function() {
             var timeField = displayTime.call(this);
@@ -88,8 +115,8 @@
             var isValidTime = re.test(this.$('#add_time').val());
             var hasTime = dateRegex.test(this.$('#add_date').val());
             if (_.all([isValidTime, hasTime], _.identity)) {
-                var newTime = this.timeAcc(this.loadedValue, this.$('#add_time').val());
-                var newHistory = this.loadedHistory + '\n' +  this.currentUser().name() + ',' + this.$('#add_time').val() + ',' + this.$('#add_date').val() + '';
+                var newTime = this._prettyTime(this.calculateNewTime());
+                var newHistory = this.loadedHistory + '\n' +  this.currentUser().name() + ',' + newTime + ',' + this.$('#add_date').val() + '';
                 this.ticket().customField('custom_field_' + timeField +'', newTime);
                 this.ticket().customField('custom_field_' + historyField +'', newHistory);
                 this.enableSave();
@@ -104,46 +131,48 @@
             this.timeRegex = data.ticket_field.regexp_for_validation;
             this.haveRequester();
         },
-        pad: function(minutes) {
-            var whole;
-            if (Number(minutes) < 10) {
-                whole = '0' + minutes;
-            } else {
-                whole = minutes;
-            }
-            return whole;
-        },
-        timeAcc: function(currentTotal, additional) {
-            var re = /\.|:/;
-            var accTime, addTime, total, currentString, additionalString;
-            if ( typeof currentTotal !== 'string') {
-                currentString = '00:00';
-            } else {
-                currentString = currentTotal.split(re);
-            }
-            accTime = Math.floor(Number(currentString[0]) * 60) + Number(currentString[1]);
-            if ( typeof additional !== 'string') {
-                additionalString = '00:00';
-            } else {
-                additionalString = additional.split(re);
-            }
-            addTime = Math.floor(Number(additionalString[0]) * 60) + Number(additionalString[1]);
-            total = accTime + addTime;
-            return Math.floor(total / 60) + ':' + this.pad(Math.floor(total % 60));
+
+        calculateNewTime: function(){
+            var oldTime = this.loadedValue.split(':'),
+                currentElapsedTime = this._elapsedTime(),
+                hours = parseInt((oldTime[0] || 0), 0),
+                minutes = parseInt((oldTime[1] || 0), 0),
+                seconds = parseInt((oldTime[2] || 0), 0);
+
+            var newTime = (parseInt(hours, 0) * 3600000) +
+                (parseInt(minutes, 0) * 60000) +
+                (parseInt(seconds, 0) * 1000) +
+                currentElapsedTime;
+
+            return this._msToHuman(newTime);
         },
 
         _msToHuman: function(ms){
-            var time = parseInt(((ms) / 1000)/60, 0);
+            var time = parseInt((ms / 1000), 0);
+            var seconds = time % 60;
+            time = parseInt(time/60, 0);
             var minutes = time % 60;
             var hours = parseInt(time/60, 0) % 24;
-            var addSignificantZero = function(num){
-                return((num < 10 ? '0' : '') + num);
-            };
 
             return {
-                minutes: addSignificantZero(minutes),
-                hours: addSignificantZero(hours)
+                seconds: seconds,
+                minutes: minutes,
+                hours: hours
             };
+        },
+        _addSignificantZero: function(num){
+            return((num < 10 ? '0' : '') + num);
+        },
+
+        _elapsedTime: function(){
+            return new Date() - this.startedTime;
+        },
+
+        _prettyTime: function(time){
+            return this._addSignificantZero(time.hours) + ':' +
+                this._addSignificantZero(time.minutes) + ':' +
+                this._addSignificantZero(time.seconds);
         }
+
     };
 }());
