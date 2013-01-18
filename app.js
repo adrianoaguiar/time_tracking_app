@@ -133,7 +133,7 @@
         },
 
         calculateNewTime: function(){
-            var oldTime = this.loadedValue.split(':'),
+            var oldTime = (this.loadedValue || '00:00:00').split(':'),
                 currentElapsedTime = this._elapsedTime(),
                 hours = parseInt((oldTime[0] || 0), 0),
                 minutes = parseInt((oldTime[1] || 0), 0),
