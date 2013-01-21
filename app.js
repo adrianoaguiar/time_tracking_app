@@ -64,7 +64,7 @@
 
         setTimeLoop: function(self){
             return setInterval(function(){
-                if (_.isEmpty(self.$('#add_time'))){
+                if (_.isEmpty(self.$('#time'))){
                     clearInterval(self.timeLoopID);
                 } else {
                     var ms = self.setWorkedTime();
