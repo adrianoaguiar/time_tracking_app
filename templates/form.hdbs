@@ -1,7 +1,7 @@
-<section data-main>
-  <form id="time-tracker">
-    <label>{{t "date"}}<input type="date" id="add_date" required disabled /></label>
-    <label>{{t "time"}}<input type="text" id="add_time" name="add_time" pattern="{{validation}}" placeholder="HH:MM" required disabled/></label>
-    <button type="submit" class="btn" id="time-tracker-submit">{{t "submit"}}</button>
-  </form>
-</section>
+<div class="centered">
+  <div class="well well-small">
+    <span id="date"></span>
+    <span id="time"></span>
+    <a href="#" id="time-tracker-submit" class="btn btn-success btn-large">{{t "submit"}}</a>
+  </div>
+</div>

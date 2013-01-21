@@ -1,55 +1,65 @@
 (function(){
-    var displayTime = function() {
-        return this.settings.totaltime;
-    };
-    var displayHistory = function() {
-        return this.settings.timehistory;
-    };
     return {
         appID:  'simple time tracking',
         defaultState: 'loading',
-        loadedValue: '',
-        loadedHistory: '',
-        timeRegex: '',
-        realRegex: '',
         startedTime: '',
+        baseHistory: '',
+        baseTime: '',
+
         events: {
-            'app.activated': 'isLoaded',
-            'ticket.requester.email.changed': 'haveRequester',
-            'getTicketField.done': 'setTicketParam',
+            'app.activated': 'onActivated',
+            'ticket.requester.email.changed': 'loadIfDataReady',
             'click #time-tracker-submit': 'submit'
-        }, //end events
-        //REQUESTS
-        requests: {
-            getTicketField: function(ticketID){
-                return {
-                    url: '/api/v2/ticket_fields/' + ticketID +'.json',
-                    dataType: 'JSON',
-                    type: 'GET',
-                    contentType: 'application/json'
-                };
-            }
         },
-        isLoaded: function(data){
+
+        onActivated: function(data){
             if(data.firstLoad){
-                if (_.isEmpty(this.timeLoopID)){
-                    this.startedTime = new Date();
-                    this.timeLoopID = this.setTimeLoop(this);
-                }
+                this.startCounter();
+                services.appsTray().show();
             }
 
-            var timeField = displayTime.call(this);
-            var historyField = displayHistory.call(this);
-            this.haveRequester();
-            this.ticketFields('custom_field_' + timeField +'').disable();
-            this.ticketFields('custom_field_' + historyField +'').disable();
-            this.ajax('getTicketField', timeField);
+            this.doneLoading = false;
+            this.loadIfDataReady();
+        },
+
+        loadIfDataReady: function(){
+            var ticket = this.ticket(),
+            requester = ticket.requester(),
+            requesterEmail = requester && requester.email();
+
+            if (!this.doneLoading && !_.isEmpty(requesterEmail)) {
+                this.baseHistory = this._historyField() || '';
+                this.baseTime = this._timeField();
+
+                this._timeFieldUI().disable();
+                this._historyFieldUI().disable();
+
+                this.switchTo('form');
+
+                this.setDefaults();
+                this.doneLoading = true;
+            }
+        },
+
+
+        startCounter: function(){
+            if (_.isEmpty(this.timeLoopID)){
+                this.startedTime = new Date();
+                this.timeLoopID = this.setTimeLoop(this);
+            }
         },
 
         submit: function(event){
             event.preventDefault();
             this.addTime();
             this.enableSave();
+            this.disableSaveOnTimeout(this);
+        },
+
+        disableSaveOnTimeout: function(self){
+            return setTimeout(function(self){
+                self.disableSave();
+            }, 5000);
         },
 
         setTimeLoop: function(self){
@@ -74,30 +84,14 @@
             var ms = this._elapsedTime();
             var elapsedTime = this._msToHuman(ms);
 
-            this.$('#add_time').val(this._prettyTime(elapsedTime));
+            this.$('#time').html(this._prettyTime(elapsedTime));
 
             return ms;
         },
 
-        haveRequester: function() {
-            var timeField = displayTime.call(this);
-            var historyField = displayHistory.call(this);
-            var requesterEmail = this.ticket().id() && this.ticket().requester().email();
-
-            if ( _.isEmpty(requesterEmail)) { return; }
-
-            this.loadedValue = this.ticket().customField('custom_field_' + timeField +'');
-            this.loadedHistory = this.ticket().customField('custom_field_' + historyField +'') || '';
-            this.switchTo('form', {
-                validation: this.timeRegex
-            });
-
-            this.setDefaults();
-        },
-
         setDefaults: function(){
-            if (_.isEmpty(this.$('#add_date').val()))
-                this.$("#add_date").val(new Date().toJSON().substring(0,10));
+            if (_.isEmpty(this.$('#date').text()))
+                this.$("#date").html(new Date().toJSON().substring(0,10));
 
             this.setWorkedTime();
 
@@ -107,33 +101,19 @@
                 this.$('#time-tracker-submit').show();
             }
         },
-        addTime: function() {
-            var timeField = displayTime.call(this);
-            var historyField = displayHistory.call(this);
-            var re = this.realRegex;
-            var dateRegex = /^\d{4}(\-|\/|\.)\d{1,2}\1\d{1,2}$/;
-            var isValidTime = re.test(this.$('#add_time').val());
-            var hasTime = dateRegex.test(this.$('#add_date').val());
-            if (_.all([isValidTime, hasTime], _.identity)) {
-                var newTime = this._prettyTime(this.calculateNewTime());
-                var newHistory = this.loadedHistory + '\n' +  this.currentUser().name() + ',' + newTime + ',' + this.$('#add_date').val() + '';
-                this.ticket().customField('custom_field_' + timeField +'', newTime);
-                this.ticket().customField('custom_field_' + historyField +'', newHistory);
-                this.enableSave();
-            } else {
-                this.ticket().customField('custom_field_' + timeField +'', this.loadedValue);
-                this.ticket().customField('custom_field_' + historyField +'', this.loadedHistory);
-                this.disableSave();
-            }
-        },
-        setTicketParam: function(data) {
-            this.realRegex = new RegExp(data.ticket_field.regexp_for_validation);
-            this.timeRegex = data.ticket_field.regexp_for_validation;
-            this.haveRequester();
-        },
 
+        addTime: function() {
+            var newTime = this._prettyTime(this.calculateNewTime());
+            var newHistory = this.baseHistory + '\n' +  this.currentUser().name() +
+                ',' + newTime + ',' + this.$('#date').text() + '';
+
+            this.ticket().customField(this._timeFieldLabel(), newTime);
+            this.ticket().customField(this._historyFieldLabel(), newHistory);
+
+            this.enableSave();
+        },
         calculateNewTime: function(){
-            var oldTime = (this.loadedValue || '00:00:00').split(':'),
+            var oldTime = (this.baseTime || '00:00:00').split(':'),
                 currentElapsedTime = this._elapsedTime(),
                 hours = parseInt((oldTime[0] || 0), 0),
                 minutes = parseInt((oldTime[1] || 0), 0),
@@ -163,16 +143,31 @@
         _addSignificantZero: function(num){
             return((num < 10 ? '0' : '') + num);
         },
-
         _elapsedTime: function(){
             return new Date() - this.startedTime;
         },
-
         _prettyTime: function(time){
             return this._addSignificantZero(time.hours) + ':' +
                 this._addSignificantZero(time.minutes) + ':' +
                 this._addSignificantZero(time.seconds);
+        },
+        _timeFieldUI: function(){
+            return this.ticketFields(this._timeFieldLabel());
+        },
+        _historyFieldUI: function(){
+            return this.ticketFields(this._historyFieldLabel());
+        },
+        _timeField: function(){
+            return this.ticket().customField(this._timeFieldLabel());
+        },
+        _historyField: function(){
+            return this.ticket().customField(this._historyFieldLabel());
+        },
+        _timeFieldLabel: function(){
+            return 'custom_field_' + this.settings.totaltime;
+        },
+        _historyFieldLabel: function(){
+            return 'custom_field_' + this.settings.timehistory;
         }
-
     };
 }());

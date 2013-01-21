@@ -13,8 +13,5 @@
         "description":  "This is a simple time tracker that counts the time a ticket is open and requires Agents to submit this time before letting them them update ticket. ",
         "name":         "Time Tracking"
     },
-    "submit": "Submit time",
-    "none": "example text",
-    "time": "Enter time worked",
-    "date": "Enter date work was done"
+    "submit": "Submit time"
 }
