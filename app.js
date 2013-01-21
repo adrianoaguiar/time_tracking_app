@@ -57,7 +57,7 @@
         },
 
         disableSaveOnTimeout: function(self){
-            return setTimeout(function(self){
+            return setTimeout(function(){
                 self.disableSave();
             }, 5000);
         },
