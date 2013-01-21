@@ -13,10 +13,8 @@
         },
 
         onActivated: function(data){
-            if(data.firstLoad){
+            if(data.firstLoad)
                 this.startCounter();
-                services.appsTray().show();
-            }
 
             this.doneLoading = false;
             this.loadIfDataReady();
@@ -28,6 +26,11 @@
             requesterEmail = requester && requester.email();
 
             if (!this.doneLoading && !_.isEmpty(requesterEmail)) {
+                if (this.ticket().status() === 'new')
+                    return;
+
+                services.appsTray().show();
+
                 this.baseHistory = this._historyField() || '';
                 this.baseTime = this._timeField();
 
