@@ -5,7 +5,7 @@
         startedTime: '',
         baseHistory: '',
         baseTime: '',
-
+        counterStarted: false,
         events: {
             'app.activated': 'onActivated',
             'ticket.requester.email.changed': 'loadIfDataReady',
@@ -13,9 +13,6 @@
         },
 
         onActivated: function(data){
-            if(data.firstLoad)
-                this.startCounter();
-
             this.doneLoading = false;
             this.loadIfDataReady();
         },
@@ -28,6 +25,11 @@
             if (!this.doneLoading && !_.isEmpty(requesterEmail)) {
                 if (this.ticket().status() === 'new')
                     return;
+
+                if (!this.counterStarted){
+                    this.startCounter();
+                    this.counterStarted = true;
+                }
 
                 services.appsTray().show();
 
