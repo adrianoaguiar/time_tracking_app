@@ -1,8 +1,12 @@
-.well-small {
+.bigfont {
   font-weight: bold;
   font-size: 150%;
 }
 
 .centered {
   text-align: center;
+}
+
+.padded {
+  padding-top: 5px;
 }

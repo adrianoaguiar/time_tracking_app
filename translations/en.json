@@ -8,6 +8,10 @@
             "timehistory": {
                 "label" : "History Field",
                 "helpText": "Place the field ID to store history of recorded time"
+            },
+            "start_threshold": {
+                "label": "Treshold Field",
+                "helpText": "Seconds to wait blocking the Save button (default 15s)"
             }
         },
         "description":  "This is a simple time tracker that counts the time a ticket is open and requires Agents to submit this time before letting them them update ticket. ",

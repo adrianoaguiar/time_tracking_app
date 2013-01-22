@@ -14,6 +14,10 @@
             "name": "timehistory",
             "type": "text",
             "required": true
+        },
+        {
+            "name": "start_threshold",
+            "type": "number"
         }
     ],
 

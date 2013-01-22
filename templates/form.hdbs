@@ -1,7 +1,14 @@
-<div class="centered">
-  <div class="well well-small">
-    <span id="date"></span>
-    <span id="time"></span>
-    <a href="#" id="time-tracker-submit" class="btn btn-success btn-large">{{t "submit"}}</a>
+<div class="well">
+  <div class="row-fluid bigfont">
+    <span id="date" class="pull-left"></span>
+    <span id="time" class="pull-right"></span>
+  </div>
+  <div class="centered" id="submit-container">
+    <div class="row-fluid padded">
+      <p>Have you entered your comments?</p>
+    </div>
+    <div class="row-fluid bigfont padded">
+      <a href="#" id="time-tracker-submit" class="btn btn-success btn-large">{{t "submit"}}</a>
+    </div>
   </div>
 </div>

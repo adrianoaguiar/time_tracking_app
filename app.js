@@ -64,7 +64,7 @@
         disableSaveOnTimeout: function(self){
             return setTimeout(function(){
                 self.disableSave();
-            }, 15000);
+            }, 10000);
         },
 
         setTimeLoop: function(self){
@@ -74,10 +74,10 @@
                 } else {
                     var ms = self.setWorkedTime();
 
-                    if (ms > 15000 &&
+                    if (ms > self._thresholdToStart() &&
                         _.isUndefined(self.thresholdReached)){
                         self.disableSave();
-                        self.$('#time-tracker-submit').show();
+                        self.$('#submit-container').show();
                         self.thresholdReached = true;
                     }
                 }
@@ -101,9 +101,9 @@
             this.setWorkedTime();
 
             if (_.isUndefined(this.thresholdReached)){
-                this.$('#time-tracker-submit').hide();
+                this.$('#submit-container').hide();
             } else{
-                this.$('#time-tracker-submit').show();
+                this.$('#submit-container').show();
             }
         },
 
@@ -131,7 +131,9 @@
 
             return this._msToHuman(newTime);
         },
-
+        _thresholdToStart: function(){
+            return ((parseInt(this.settings.start_threshold, 0) || 15) * 1000);
+        },
         _msToHuman: function(ms){
             var time = parseInt((ms / 1000), 0);
             var seconds = time % 60;
