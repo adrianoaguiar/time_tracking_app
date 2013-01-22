@@ -96,7 +96,7 @@
 
         setDefaults: function(){
             if (_.isEmpty(this.$('#date').text()))
-                this.$("#date").html(new Date().toJSON().substring(0,10));
+                this.$("#date").html(this._formattedDate());
 
             this.setWorkedTime();
 
@@ -110,7 +110,7 @@
         addTime: function() {
             var newTime = this._prettyTime(this.calculateNewTime());
             var newHistory = this.baseHistory + '\n' +  this.currentUser().name() +
-                ',' + newTime + ',' + this.$('#date').text() + '';
+                ',' + newTime + ',' + this._formattedDate('yyyy-mm-dd') + '';
 
             this.ticket().customField(this._timeFieldLabel(), newTime);
             this.ticket().customField(this._historyFieldLabel(), newHistory);
@@ -133,6 +133,15 @@
         },
         _thresholdToStart: function(){
             return ((parseInt(this.settings.start_threshold, 0) || 15) * 1000);
+        },
+        _formattedDate: function(format){
+            var dateString = format || this._dateFormat(),
+                date = new Date();
+
+            dateString = dateString.replace('dd', this._addSignificantZero(date.getDate()));
+            dateString = dateString.replace('mm', this._addSignificantZero(date.getMonth() + 1));
+
+            return dateString.replace('yyyy', date.getFullYear());
         },
         _msToHuman: function(ms){
             var time = parseInt((ms / 1000), 0);
@@ -175,6 +184,9 @@
         },
         _historyFieldLabel: function(){
             return 'custom_field_' + this.settings.timehistory;
+        },
+        _dateFormat: function(){
+            return this.settings.date_format || 'yyyy-mm-dd';
         }
     };
 }());

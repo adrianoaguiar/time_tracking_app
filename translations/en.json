@@ -12,6 +12,10 @@
             "start_threshold": {
                 "label": "Treshold Field",
                 "helpText": "Seconds to wait blocking the Save button (default 15s)"
+            },
+            "date_format": {
+                "label": "Date Format",
+                "helpText": "Please enter one of the following date formats: dd-mm-yyyy , mm-dd-yyyy or yyyy-mm-dd"
             }
         },
         "description":  "This is a simple time tracker that counts the time a ticket is open and requires Agents to submit this time before letting them them update ticket. ",

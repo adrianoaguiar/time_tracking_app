@@ -18,6 +18,10 @@
         {
             "name": "start_threshold",
             "type": "number"
+        },
+        {
+            "name": "date_format",
+            "type": "text"
         }
     ],
 
