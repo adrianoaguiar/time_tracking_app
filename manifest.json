@@ -22,6 +22,10 @@
         {
             "name": "date_format",
             "type": "text"
+        },
+        {
+            "name": "block_save_interval",
+            "type": "number"
         }
     ],
 

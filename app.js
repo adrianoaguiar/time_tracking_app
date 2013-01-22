@@ -64,7 +64,7 @@
         disableSaveOnTimeout: function(self){
             return setTimeout(function(){
                 self.disableSave();
-            }, 10000);
+            }, self._disableSaveInterval());
         },
 
         setTimeLoop: function(self){
@@ -81,7 +81,7 @@
                         self.thresholdReached = true;
                     }
                 }
-            }, 5000);
+            }, 1000);
         },
 
         // Returns worded time as ms
@@ -133,6 +133,9 @@
         },
         _thresholdToStart: function(){
             return ((parseInt(this.settings.start_threshold, 0) || 15) * 1000);
+        },
+        _disableSaveInterval: function(){
+            return ((parseInt(this.settings.block_save_interval, 0) || 5) * 1000);
         },
         _formattedDate: function(format){
             var dateString = format || this._dateFormat(),
