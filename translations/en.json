@@ -1,29 +1,36 @@
 {
-    "app": {
-        "parameters" : {
-            "totaltime": {
-                "label": "Time Field",
-                "helpText": "Place the field ID to store the total time in"
-            },
-            "timehistory": {
-                "label" : "History Field",
-                "helpText": "Place the field ID to store history of recorded time"
-            },
-            "start_threshold": {
-                "label": "Treshold Field",
-                "helpText": "Seconds to wait before blocking the Save button (default 15s)"
-            },
-            "date_format": {
-                "label": "Date Format",
-                "helpText": "Please enter one of the following date formats: dd-mm-yyyy , mm-dd-yyyy or yyyy-mm-dd"
-            },
-            "block_save_interval": {
-                "label": "Lock Interval",
-                "helpText": "Seconds to wait after a time submission before blocking the Save button (default to 5s)"
-            }
-        },
-        "description":  "This is a simple time tracker that counts the time a ticket is open and requires Agents to submit this time before letting them them update ticket. ",
-        "name":         "Time Tracking"
+  "app": {
+    "parameters" : {
+      "totaltime": {
+        "label": "Time Field",
+        "helpText": "Place the field ID to store the total time in"
+      },
+      "timehistory": {
+        "label" : "History Field",
+        "helpText": "Place the field ID to store history of recorded time"
+      },
+      "start_threshold": {
+        "label": "Treshold Field",
+        "helpText": "Seconds to wait before blocking the Save button (default 15s)"
+      },
+      "date_format": {
+        "label": "Date Format",
+        "helpText": "Please enter one of the following date formats: dd-mm-yyyy, mm-dd-yyyy or yyyy-mm-dd"
+      },
+      "block_save_interval": {
+        "label": "Lock Interval",
+        "helpText": "Seconds to wait after a time submission before blocking the Save button (default to 5s)"
+      }
     },
-    "submit": "Submit time"
+    "description":  "This is a simple time tracker that counts the time a ticket is open and requires Agents to submit this time before letting them them update ticket. ",
+    "name":         "Time Tracking"
+  },
+
+  "warning": "Have you entered your comments?",
+  "submit": "Submit",
+  "current_time": "Current Time",
+  "custom_time": "Custom Time",
+  "modal_header": "Enter custom time",
+  "modal_save": "Save Time",
+  "modal_close": "Close"
 }

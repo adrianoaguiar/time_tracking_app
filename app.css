@@ -1,9 +1,12 @@
-.bigfont {
+.bold {
   font-weight: bold;
+}
+
+.big {
   font-size: 150%;
 }
 
-.centered {
+.text-center {
   text-align: center;
 }
 
