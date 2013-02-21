@@ -25,7 +25,8 @@
       requesterEmail = requester && requester.email();
 
       if (!this.doneLoading && !_.isEmpty(requesterEmail)) {
-        if (this.ticket().status() === 'new')
+        if (!this.setting('active_on_new') &&
+            this.ticket().status() === 'new')
           return;
 
         if (!this.counterStarted){

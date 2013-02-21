@@ -20,6 +20,10 @@
       "block_save_interval": {
         "label": "Lock Interval",
         "helpText": "Seconds to wait after a time submission before blocking the Save button (default to 5s)"
+      },
+      "active_on_new": {
+        "label": "Active on new ticket?",
+        "helpText": "If checked, you will be able to register time for 'New' ticket"
       }
     },
     "description":  "This is a simple time tracker that counts the time a ticket is open and requires Agents to submit this time before letting them them update ticket. ",

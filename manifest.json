@@ -1,37 +1,42 @@
 {
-    "author": {
-	"name" :"Pierre Nespo",
-	"email": "pierre.nespo@gmail.com"
+  "author": {
+    "name" :"Pierre Nespo",
+    "email": "pierre.nespo@gmail.com"
+  },
+
+  "parameters": [
+    {
+      "name": "totaltime",
+      "type": "text",
+      "required": true
     },
+    {
+      "name": "timehistory",
+      "type": "text",
+      "required": true
+    },
+    {
+      "name": "start_threshold",
+      "type": "number"
+    },
+    {
+      "name": "date_format",
+      "type": "text"
+    },
+    {
+      "name": "block_save_interval",
+      "type": "number"
+    },
+    {
+      "name": "active_on_new",
+      "type": "checkbox"
+    }
 
-    "parameters": [
-        {
-            "name": "totaltime",
-            "type": "text",
-            "required": true
-        },
-        {
-            "name": "timehistory",
-            "type": "text",
-            "required": true
-        },
-        {
-            "name": "start_threshold",
-            "type": "number"
-        },
-        {
-            "name": "date_format",
-            "type": "text"
-        },
-        {
-            "name": "block_save_interval",
-            "type": "number"
-        }
-    ],
+  ],
 
-    "frameworkVersion": "0.5",
-    "location":"ticket_sidebar",
-    "defaultLocale": "en",
-    "private": true,
-    "singleInstall": true
+  "frameworkVersion": "0.5",
+  "location":"ticket_sidebar",
+  "defaultLocale": "en",
+  "private": true,
+  "singleInstall": true
 }
