@@ -10,6 +10,21 @@
   text-align: center;
 }
 
+.btn-group a {
+    display:inline-block;
+}
+
 .padded {
   padding-top: 8px;
+}
+
+.btn-group-wrap {
+    text-align: center;
+}
+
+div.btn-group {
+    margin: 0 auto; 
+    text-align: center;
+    width: inherit;
+    display: inline-block;
 }

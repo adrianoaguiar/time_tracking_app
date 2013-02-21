@@ -10,8 +10,8 @@
     events: {
       'app.activated'                           : 'onActivated',
       'ticket.requester.email.changed'          : 'loadIfDataReady',
-      'click #time-tracker-submit'              : 'submit',
-      'click #time-tracker-custom-submit'       : 'submitCustom'
+      'click .time-tracker-submit'              : 'submit',
+      'click .time-tracker-custom-submit'       : 'submitCustom'
     },
 
     onActivated: function(data){
@@ -62,7 +62,7 @@
     },
 
     submitCustom: function(){
-      this.addTime(this._humanToMs(this.$('#custom_time').val()));
+      this.addTime(this._humanToMs(this.$('div.modal-body input').val()));
       this.disableSaveOnTimeout(this);
       this.$('#customTimeModal').modal('hide');
     },
@@ -75,7 +75,7 @@
 
     setTimeLoop: function(self){
       return setInterval(function(){
-        if (_.isEmpty(self.$('#time'))){
+        if (_.isEmpty(self.$('span.time'))){
           clearInterval(self.timeLoopID);
         } else {
           var ms = self.setWorkedTime();
@@ -83,7 +83,7 @@
           if (ms > self._thresholdToStart() &&
               _.isUndefined(self.thresholdReached)){
             self.disableSave();
-            self.$('#submit-container').show();
+            self.$('.submit-container').show();
             self.thresholdReached = true;
           }
         }
@@ -95,21 +95,21 @@
       var ms = this._elapsedTime();
       var elapsedTime = this._msToHuman(ms);
 
-      this.$('#time').html(this._prettyTime(elapsedTime));
+      this.$('span.time').html(this._prettyTime(elapsedTime));
 
       return ms;
     },
 
     setDefaults: function(){
-      if (_.isEmpty(this.$('#date').text()))
-        this.$("#date").html(this._formattedDate());
+      if (_.isEmpty(this.$('span.date').text()))
+        this.$("span.date").html(this._formattedDate());
 
       this.setWorkedTime();
 
       if (_.isUndefined(this.thresholdReached)){
-        this.$('#submit-container').hide();
+        this.$('.submit-container').hide();
       } else{
-        this.$('#submit-container').show();
+        this.$('.submit-container').show();
       }
     },
 
