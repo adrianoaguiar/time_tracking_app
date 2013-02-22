@@ -25,8 +25,7 @@
           this.ticket().requester() &&
           this.ticket().requester().email()) {
 
-        if (!this.setting('active_on_new') &&
-            this.ticket().status() === 'new')
+        if (this.shouldNotRun())
           return;
 
         if (!this.counterStarted){
@@ -43,6 +42,8 @@
         this._historyFieldUI().disable();
 
         this.switchTo('form', {
+          can_submit_custom_time: this.setting("can_submit_custom_time"),
+          can_submit_both_time: this.setting("can_submit_custom_time") && this.setting("can_submit_current_time"),
           custom_time: this._customTimeDefault(),
           custom_time_format: this._customTimeFormat()
         });
@@ -50,6 +51,13 @@
         this.setDefaults();
         this.doneLoading = true;
       }
+    },
+
+    shouldNotRun: function(){
+      return (!(this.setting('can_submit_custom_time') ||
+               this.setting('can_submit_current_time')) ||
+              (!this.setting('active_on_new') &&
+               this.ticket().status() === 'new'));
     },
 
     startCounter: function(){

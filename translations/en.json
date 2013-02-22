@@ -25,6 +25,12 @@
         "label": "Active on new ticket?",
         "helpText": "If checked, you will be able to register time for 'New' ticket"
       },
+      "can_submit_custom_time": {
+        "label": "Agent can submit custom time?"
+      },
+      "can_submit_current_time": {
+        "label": "Agent can submit calculated time?"
+      },
       "custom_time_format": {
         "label": "Custom Time Format",
         "helpText": "Choose a format for time submission. HH:MM or MM (default: HH:MM)."

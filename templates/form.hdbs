@@ -12,6 +12,7 @@
     </div>
 
     <div class="span12 text-center">
+      {{#if can_submit_both_time}}
       <div class="btn-group-wrap">
         <div class="btn-group">
           <a class="btn btn-large btn-success dropdown-toggle" data-toggle="dropdown" href="#">
@@ -21,7 +22,7 @@
 
           <ul class="dropdown-menu">
             <li>
-              <a href="#" class="time-tracker-submit">{{t "current_time"}}</a>
+              <a class="time-tracker-submit">{{t "current_time"}}</a>
             </li>
             <li>
               <a href="#customTimeModal" role="button" data-toggle="modal">{{t "custom_time"}}</a>
@@ -29,6 +30,14 @@
           </ul>
         </div>
       </div>
+      {{else}}
+      <br/>
+      {{#if can_submit_custom_time}}
+        <a href="#customTimeModal" role="button" data-toggle="modal" class="btn-large btn-success">{{t "submit"}} {{t "custom_time"}}</a>
+      {{else}}
+        <a class="time-tracker-submit btn-large btn-success">{{t "submit"}} {{t "current_time"}}</a>
+      {{/if}}
+      {{/if}}
     </div>
   </div>
 </div>

@@ -32,6 +32,14 @@
       "type": "checkbox"
     },
     {
+      "name": "can_submit_custom_time",
+      "type": "checkbox"
+    },
+    {
+      "name": "can_submit_current_time",
+      "type": "checkbox"
+    },
+    {
       "name": "custom_time_format",
       "type": "text"
     }
