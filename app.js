@@ -20,11 +20,11 @@
     },
 
     loadIfDataReady: function(){
-      var ticket = this.ticket(),
-      requester = ticket.requester(),
-      requesterEmail = requester && requester.email();
 
-      if (!this.doneLoading && !_.isEmpty(requesterEmail)) {
+      if (!this.doneLoading && this.ticket() &&
+          this.ticket().requester() &&
+          this.ticket().requester().email()) {
+
         if (!this.setting('active_on_new') &&
             this.ticket().status() === 'new')
           return;
@@ -42,7 +42,10 @@
         this._timeFieldUI().disable();
         this._historyFieldUI().disable();
 
-        this.switchTo('form');
+        this.switchTo('form', {
+          custom_time: this._customTimeDefault(),
+          custom_time_format: this._customTimeFormat()
+        });
 
         this.setDefaults();
         this.doneLoading = true;
@@ -58,6 +61,7 @@
 
     submit: function(event){
       event.preventDefault();
+
       this.addTime();
       this.disableSaveOnTimeout(this);
     },
@@ -128,6 +132,7 @@
 
       this.enableSave();
     },
+
     calculateNewTime: function(time){
       var oldTime = (this.baseTime || '00:00:00').split(':'),
       currentElapsedTime = (_.isUndefined(time) ? this._elapsedTime() : time),
@@ -141,6 +146,14 @@
         currentElapsedTime;
 
       return this._msToHuman(newTime);
+    },
+
+    _customTimeDefault: function(){
+      return _.map(this._customTimeFormat().split(':'),
+                   function(i) { return "00";}).join(":");
+    },
+    _customTimeFormat: function(){
+      return this.setting('custom_time_format') || "HH:MM";
     },
     _thresholdToStart: function(){
       return ((parseInt(this.settings.start_threshold, 0) || 15) * 1000);
@@ -172,8 +185,17 @@
     },
     _humanToMs: function(timestring){
       var time = timestring.split(':').map(function(i){return parseInt(i, 0);});
+      var computedTime = 0;
 
-      return ((time[0] * 3600) + (time[1] * 60) + time[2])*1000;
+      // If length is equal to 2 then the first element represents hours and the second minutes.
+      // Else the first element represents minutes
+      if (time.length === 2){
+        computedTime = (time[0] * 3600) + (time[1] * 60);
+      } else {
+        computedTime = time[0] * 60;
+      }
+
+      return computedTime * 1000;
     },
     _addSignificantZero: function(num){
       return((num < 10 ? '0' : '') + num);

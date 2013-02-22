@@ -36,10 +36,10 @@
 <div id="customTimeModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-    <h3 id="myModalLabel">{{t "modal_header"}}</h3>
+    <h3>{{t "modal_header"}} ({{custom_time_format}})</h3>
   </div>
   <div class="modal-body text-center">
-    <input id="custom_time" type="text" value="00:00:00" class="input-large big bold text-center"/>
+    <input type="text" value="{{custom_time}}" class="input-large big bold text-center"/>
   </div>
   <div class="modal-footer">
     <button class="btn" data-dismiss="modal" aria-hidden="true">{{t "modal_close"}}</button>

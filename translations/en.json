@@ -11,7 +11,7 @@
       },
       "start_threshold": {
         "label": "Treshold Field",
-        "helpText": "Seconds to wait before blocking the Save button (default 15s)"
+        "helpText": "Seconds to wait before blocking the Save button (default: 15)"
       },
       "date_format": {
         "label": "Date Format",
@@ -19,11 +19,15 @@
       },
       "block_save_interval": {
         "label": "Lock Interval",
-        "helpText": "Seconds to wait after a time submission before blocking the Save button (default to 5s)"
+        "helpText": "Seconds to wait after a time submission before blocking the Save button (default: 5)"
       },
       "active_on_new": {
         "label": "Active on new ticket?",
         "helpText": "If checked, you will be able to register time for 'New' ticket"
+      },
+      "custom_time_format": {
+        "label": "Custom Time Format",
+        "helpText": "Choose a format for time submission. HH:MM or MM (default: HH:MM)."
       }
     },
     "description":  "This is a simple time tracker that counts the time a ticket is open and requires Agents to submit this time before letting them them update ticket. ",

@@ -30,8 +30,11 @@
     {
       "name": "active_on_new",
       "type": "checkbox"
+    },
+    {
+      "name": "custom_time_format",
+      "type": "text"
     }
-
   ],
 
   "frameworkVersion": "0.5",
