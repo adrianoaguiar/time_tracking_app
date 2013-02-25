@@ -70,7 +70,7 @@
     submit: function(event){
       event.preventDefault();
 
-      this.addTime();
+      this.addTime(this._elapsedTime());
       this.disableSaveOnTimeout(this);
     },
 
@@ -125,17 +125,14 @@
         this.$('.submit-container').show();
       }
     },
-
+    // time == ms
     addTime: function(time) {
-      var newTime = (_.isUndefined(time) ? this.calculateNewTime() :
-                     this.calculateNewTime(time));
-
-      newTime = this._prettyTime(newTime);
-
+      var newTime = this._prettyTime(this._msToHuman(time));
+      var newTotalTime = this._prettyTime(this.calculateNewTime(time));
       var newHistory = this.baseHistory + '\n' +  this.currentUser().name() +
         ',' + newTime + ',' + this._formattedDate('yyyy-mm-dd') + '';
 
-      this.ticket().customField(this._timeFieldLabel(), newTime);
+      this.ticket().customField(this._timeFieldLabel(), newTotalTime);
       this.ticket().customField(this._historyFieldLabel(), newHistory);
 
       this.enableSave();
@@ -143,7 +140,6 @@
 
     calculateNewTime: function(time){
       var oldTime = (this.baseTime || '00:00:00').split(':'),
-      currentElapsedTime = (_.isUndefined(time) ? this._elapsedTime() : time),
       hours = parseInt((oldTime[0] || 0), 0),
       minutes = parseInt((oldTime[1] || 0), 0),
       seconds = parseInt((oldTime[2] || 0), 0);
@@ -151,7 +147,7 @@
       var newTime = (parseInt(hours, 0) * 3600000) +
         (parseInt(minutes, 0) * 60000) +
         (parseInt(seconds, 0) * 1000) +
-        currentElapsedTime;
+        time;
 
       return this._msToHuman(newTime);
     },
