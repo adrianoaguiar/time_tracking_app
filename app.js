@@ -1,4 +1,56 @@
 (function(){
+  var TimeHelper = {
+    _parseInt: function(num){
+      return parseInt(num, 0);
+    },
+    msToSeconds: function(ms){
+      return this._parseInt(ms / 1000);
+    },
+    msToMinutes: function(ms){
+      return this._parseInt((this.msToSeconds(ms) / 60));
+    },
+    minutesToMs: function(minutes){
+      return this._parseInt(minutes * 60000);
+    },
+    addSignificantZero: function(num){
+      return((num < 10 ? '0' : '') + num);
+    },
+    humanToMs: function(timestring){
+      var time = timestring.split(':').map(function(i){
+        return this._parseInt(i);
+      }, this);
+      var computedTime = 0;
+
+      // If length is equal to 2 then the first element represents hours and the second minutes.
+      // Else the first element represents minutes
+      if (time.length === 2){
+        computedTime = (time[0] * 3600) + (time[1] * 60);
+      } else {
+        computedTime = time[0] * 60;
+      }
+
+      return computedTime * 1000;
+    },
+    msToObject: function(ms){
+      var time = this._parseInt((ms / 1000));
+      var seconds = time % 60;
+      time = this._parseInt(time/60);
+      var minutes = time % 60;
+      var hours = this._parseInt(time/60) % 24;
+
+      return {
+        seconds: seconds,
+        minutes: minutes,
+        hours: hours
+      };
+    },
+    prettyTime: function(timeObject){
+      return this.addSignificantZero(timeObject.hours) + ':' +
+        this.addSignificantZero(timeObject.minutes) + ':' +
+        this.addSignificantZero(timeObject.seconds);
+    }
+  };
+
   return {
     appID:  'simple time tracking',
     defaultState: 'loading',
@@ -36,7 +88,9 @@
         services.appsTray().show();
 
         this.baseHistory = this._historyField() || '';
-        this.baseTime = this._timeField();
+        this.baseTime = TimeHelper.minutesToMs(
+          TimeHelper._parseInt(this._timeField()) || 0
+        );
 
         this._timeFieldUI().disable();
         this._historyFieldUI().disable();
@@ -75,7 +129,7 @@
     },
 
     submitCustom: function(){
-      this.addTime(this._humanToMs(this.$('div.modal-body input').val()));
+      this.addTime(TimeHelper.humanToMs(this.$('div.modal-body input').val()));
       this.disableSaveOnTimeout(this);
       this.$('#customTimeModal').modal('hide');
     },
@@ -106,9 +160,9 @@
     // Returns worded time as ms
     setWorkedTime: function(){
       var ms = this._elapsedTime();
-      var elapsedTime = this._msToHuman(ms);
+      var elapsedTime = TimeHelper.msToObject(ms);
 
-      this.$('span.time').html(this._prettyTime(elapsedTime));
+      this.$('span.time').html(TimeHelper.prettyTime(elapsedTime));
 
       return ms;
     },
@@ -127,29 +181,19 @@
     },
     // time == ms
     addTime: function(time) {
-      var newTime = this._prettyTime(this._msToHuman(time));
-      var newTotalTime = this._prettyTime(this.calculateNewTime(time));
+      var newTime = TimeHelper.prettyTime(TimeHelper.msToObject(time));
+      var newTotalTime = this.calculateNewTime(time);
       var newHistory = this.baseHistory + '\n' +  this.currentUser().name() +
         ',' + newTime + ',' + this._formattedDate('yyyy-mm-dd') + '';
 
-      this.ticket().customField(this._timeFieldLabel(), newTotalTime);
+      this.ticket().customField(this._timeFieldLabel(), TimeHelper.msToMinutes(newTotalTime));
       this.ticket().customField(this._historyFieldLabel(), newHistory);
 
       this.enableSave();
     },
 
     calculateNewTime: function(time){
-      var oldTime = (this.baseTime || '00:00:00').split(':'),
-      hours = parseInt((oldTime[0] || 0), 0),
-      minutes = parseInt((oldTime[1] || 0), 0),
-      seconds = parseInt((oldTime[2] || 0), 0);
-
-      var newTime = (parseInt(hours, 0) * 3600000) +
-        (parseInt(minutes, 0) * 60000) +
-        (parseInt(seconds, 0) * 1000) +
-        time;
-
-      return this._msToHuman(newTime);
+      return this.baseTime + time;
     },
 
     _customTimeDefault: function(){
@@ -169,48 +213,13 @@
       var dateString = format || this._dateFormat(),
       date = new Date();
 
-      dateString = dateString.replace('dd', this._addSignificantZero(date.getDate()));
-      dateString = dateString.replace('mm', this._addSignificantZero(date.getMonth() + 1));
+      dateString = dateString.replace('dd', TimeHelper.addSignificantZero(date.getDate()));
+      dateString = dateString.replace('mm', TimeHelper.addSignificantZero(date.getMonth() + 1));
 
       return dateString.replace('yyyy', date.getFullYear());
     },
-    _msToHuman: function(ms){
-      var time = parseInt((ms / 1000), 0);
-      var seconds = time % 60;
-      time = parseInt(time/60, 0);
-      var minutes = time % 60;
-      var hours = parseInt(time/60, 0) % 24;
-
-      return {
-        seconds: seconds,
-        minutes: minutes,
-        hours: hours
-      };
-    },
-    _humanToMs: function(timestring){
-      var time = timestring.split(':').map(function(i){return parseInt(i, 0);});
-      var computedTime = 0;
-
-      // If length is equal to 2 then the first element represents hours and the second minutes.
-      // Else the first element represents minutes
-      if (time.length === 2){
-        computedTime = (time[0] * 3600) + (time[1] * 60);
-      } else {
-        computedTime = time[0] * 60;
-      }
-
-      return computedTime * 1000;
-    },
-    _addSignificantZero: function(num){
-      return((num < 10 ? '0' : '') + num);
-    },
     _elapsedTime: function(){
       return new Date() - this.startedTime;
-    },
-    _prettyTime: function(time){
-      return this._addSignificantZero(time.hours) + ':' +
-        this._addSignificantZero(time.minutes) + ':' +
-        this._addSignificantZero(time.seconds);
     },
     _timeFieldUI: function(){
       return this.ticketFields(this._timeFieldLabel());
