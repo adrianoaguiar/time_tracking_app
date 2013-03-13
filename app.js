@@ -72,7 +72,6 @@
     },
 
     loadIfDataReady: function(){
-
       if (!this.doneLoading && this.ticket() &&
           this.ticket().requester() &&
           this.ticket().requester().email()) {
@@ -111,7 +110,8 @@
       return (!(this.setting('can_submit_custom_time') ||
                this.setting('can_submit_current_time')) ||
               (!this.setting('active_on_new') &&
-               this.ticket().status() === 'new'));
+               this.ticket().status() === 'new') ||
+              (this.ticket().status() === 'closed'));
     },
 
     startCounter: function(){
