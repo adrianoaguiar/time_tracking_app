@@ -40,9 +40,10 @@
     "name":         "Time Tracking"
   },
 
+  "total_time_spent": "Total time spent on ticket",
   "warning": "Have you entered your comments?",
   "submit": "Submit",
-  "current_time": "Actual Time",
+   "current_time": "Actual Time",
   "custom_time": "Custom Time",
   "modal_header": "Enter custom time",
   "modal_save": "Save Time",

@@ -104,7 +104,8 @@
           can_submit_custom_time: this.setting("can_submit_custom_time"),
           can_submit_both_time: this.setting("can_submit_custom_time") && this.setting("can_submit_current_time"),
           custom_time: this._customTimeDefault(),
-          custom_time_format: this._customTimeFormat()
+          custom_time_format: this._customTimeFormat(),
+          total_time: this._prettyTotalTime(this.baseTime)
         });
 
         this.setDefaults();
@@ -195,13 +196,17 @@
       this.ticket().customField(this._timeFieldLabel(), TimeHelper.msToMinutes(newTotalTime));
       this.ticket().customField(this._historyFieldLabel(), newHistory);
 
+      this.$('span.total_time').html(this._prettyTotalTime(newTotalTime));
+
       this.enableSave();
     },
 
     calculateNewTime: function(time){
       return this.baseTime + time;
     },
-
+    _prettyTotalTime: function(time){
+      return TimeHelper.prettyTime(TimeHelper.msToObject(time)).slice(0,5);
+    },
     _customTimeDefault: function(){
       return _.map(this._customTimeFormat().split(':'),
                    function(i) { return "00";}).join(":");

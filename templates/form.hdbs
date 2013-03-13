@@ -6,6 +6,12 @@
     </div>
   </div>
 
+  <div class="row-fluid text-center bold total_time">
+    <div class="span12">
+      {{t "total_time_spent"}}: <span class="total_time">{{total_time}}</span>
+    </div>
+  </div>
+
   <div class="row-fluid submit-container">
     <div class="span12 text-center big">
       <p><strong>{{t "warning"}}</strong></p>
