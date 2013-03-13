@@ -68,7 +68,16 @@
 
     onActivated: function(data){
       this.doneLoading = false;
+
+      this.hideOrDisableFields();
+
       this.loadIfDataReady();
+    },
+
+    hideOrDisableFields: function(){
+      this._timeFieldUI().hide();
+      this._timeFieldUI().disable();
+      this._historyFieldUI().disable();
     },
 
     loadIfDataReady: function(){
@@ -90,9 +99,6 @@
         this.baseTime = TimeHelper.minutesToMs(
           TimeHelper._parseInt(this._timeField()) || 0
         );
-
-        this._timeFieldUI().disable();
-        this._historyFieldUI().disable();
 
         this.switchTo('form', {
           can_submit_custom_time: this.setting("can_submit_custom_time"),
