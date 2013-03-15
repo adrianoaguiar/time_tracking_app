@@ -23,7 +23,10 @@
 
       // If length is equal to 2 then the first element represents hours and the second minutes.
       // Else the first element represents minutes
-      if (time.length === 2){
+
+      if (time.length === 3){
+        computedTime = (time[0] * 3600) + (time[1] * 60) + time[2];
+      } else if (time.length === 2){
         computedTime = (time[0] * 3600) + (time[1] * 60);
       } else {
         computedTime = time[0] * 60;
@@ -48,15 +51,25 @@
       return this.addSignificantZero(timeObject.hours) + ':' +
         this.addSignificantZero(timeObject.minutes) + ':' +
         this.addSignificantZero(timeObject.seconds);
+    },
+    extractFromHistory: function(history){
+
+      if (_.isEmpty(history))
+        return 0;
+
+      return _.reduce(history.match(/\d{2}:\d{2}:\d{2}/g),
+                     function(memo,time){
+                       return memo + this.humanToMs(time);
+                     }, 0, this);
     }
   };
 
   return {
     appID:  'simple time tracking',
     defaultState: 'loading',
-    startedTime: '',
-    baseHistory: '',
-    baseTime: '',
+    startedTime: 0,
+    baseHistory: 0,
+    baseTime: 0,
     counterStarted: false,
 
     events: {
@@ -96,9 +109,7 @@
         services.appsTray().show();
 
         this.baseHistory = this._historyField() || '';
-        this.baseTime = TimeHelper.minutesToMs(
-          TimeHelper._parseInt(this._timeField()) || 0
-        );
+        this.baseTime = TimeHelper.extractFromHistory(this.baseHistory);
 
         this.switchTo('form', {
           can_submit_custom_time: this.setting("can_submit_custom_time"),
@@ -193,8 +204,8 @@
       var newHistory = this.baseHistory + '\n' +  this.currentUser().name() +
         ',' + newTime + ',' + this._formattedDate('yyyy-mm-dd') + '';
 
-      this.ticket().customField(this._timeFieldLabel(), TimeHelper.msToMinutes(newTotalTime));
       this.ticket().customField(this._historyFieldLabel(), newHistory);
+      this.ticket().customField(this._timeFieldLabel(), TimeHelper.msToMinutes(newTotalTime));
 
       this.$('span.total_time').html(this._prettyTotalTime(newTotalTime));
 
