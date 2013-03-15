@@ -41,6 +41,7 @@
   },
 
   "total_time_spent": "Total time spent on ticket",
+  "settings_error": "Please check the app settings to allow the agent to submit custom or actual time.",
   "warning": "Have you entered your comments?",
   "submit": "Submit",
    "current_time": "Actual Time",

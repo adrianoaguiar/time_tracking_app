@@ -99,7 +99,7 @@
           this.ticket().requester().email()) {
 
         if (this.shouldNotRun())
-          return;
+          return this.displayError();
 
         if (!this.counterStarted){
           this.startCounter();
@@ -126,10 +126,17 @@
 
     shouldNotRun: function(){
       return (!(this.setting('can_submit_custom_time') ||
-               this.setting('can_submit_current_time')) ||
+                this.setting('can_submit_current_time')) ||
               (!this.setting('active_on_new') &&
                this.ticket().status() === 'new') ||
               (this.ticket().status() === 'closed'));
+    },
+
+    displayError: function(){
+      if (!(this.setting('can_submit_custom_time') ||
+            this.setting('can_submit_current_time'))){
+        this.switchTo('settings_error');
+      }
     },
 
     startCounter: function(){
