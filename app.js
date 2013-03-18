@@ -95,6 +95,7 @@
 
     loadIfDataReady: function(){
       if (!this.doneLoading && this.ticket() &&
+          this.ticket().id() &&
           this.ticket().requester() &&
           this.ticket().requester().email()) {
 
