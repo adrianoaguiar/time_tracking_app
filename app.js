@@ -4,10 +4,10 @@
       return parseInt(num, 0);
     },
     msToSeconds: function(ms){
-      return this._parseInt(ms / 1000);
+      return ms / 1000;
     },
     msToMinutes: function(ms){
-      return this._parseInt((this.msToSeconds(ms) / 60));
+      return this.msToSeconds(ms) / 60;
     },
     minutesToMs: function(minutes){
       return this._parseInt(minutes * 60000);
@@ -34,7 +34,7 @@
 
       return computedTime * 1000;
     },
-    msToObject: function(ms){
+    msToObject: function(ms, options){
       var time = this._parseInt((ms / 1000));
       var seconds = time % 60;
       time = this._parseInt(time/60);
@@ -53,7 +53,6 @@
         this.addSignificantZero(timeObject.seconds);
     },
     extractFromHistory: function(history){
-
       if (_.isEmpty(history))
         return 0;
 
@@ -112,12 +111,14 @@
         this.baseHistory = this._historyField() || '';
         this.baseTime = TimeHelper.extractFromHistory(this.baseHistory);
 
+        var ceiledBaseTime = Math.ceil(TimeHelper.msToMinutes(this.baseTime));
+
         this.switchTo('form', {
           can_submit_custom_time: this.setting("can_submit_custom_time"),
           can_submit_both_time: this.setting("can_submit_custom_time") && this.setting("can_submit_current_time"),
           custom_time: this._customTimeDefault(),
           custom_time_format: this._customTimeFormat(),
-          total_time: this._prettyTotalTime(this.baseTime)
+          total_time: this._prettyTotalTime(TimeHelper.minutesToMs(ceiledBaseTime))
         });
 
         this.setDefaults();
@@ -208,14 +209,15 @@
     // time == ms
     addTime: function(time) {
       var newTime = TimeHelper.prettyTime(TimeHelper.msToObject(time));
-      var newTotalTime = this.calculateNewTime(time);
+      // We ceil as requested by toby/Max
+      var newTotalTimeInMinutes = Math.ceil(TimeHelper.msToMinutes(this.calculateNewTime(time)));
       var newHistory = this.baseHistory + '\n' +  this.currentUser().name() +
         ',' + newTime + ',' + this._formattedDate('yyyy-mm-dd') + '';
 
       this.ticket().customField(this._historyFieldLabel(), newHistory);
-      this.ticket().customField(this._timeFieldLabel(), TimeHelper.msToMinutes(newTotalTime));
+      this.ticket().customField(this._timeFieldLabel(), newTotalTimeInMinutes);
 
-      this.$('span.total_time').html(this._prettyTotalTime(newTotalTime));
+      this.$('span.total_time').html(this._prettyTotalTime(TimeHelper.minutesToMs(newTotalTimeInMinutes)));
 
       this.enableSave();
     },
