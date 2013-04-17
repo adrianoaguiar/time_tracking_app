@@ -2,7 +2,7 @@
   <div class="row-fluid">
     <div class="span12 big bold">
       <span class="date pull-left"></span>
-      <span class="time pull-right"></span>
+      <span class="time-{{unique_id}} pull-right"></span>
     </div>
   </div>
 

@@ -70,16 +70,17 @@
     baseHistory: 0,
     baseTime: 0,
     counterStarted: false,
+    uniqueID: '',
 
     events: {
-      'app.activated'                           : 'onActivated',
+      'app.activated'                           : 'activate',
       'ticket.requester.email.changed'          : 'loadIfDataReady',
       'click .time-tracker-submit'              : 'submit',
       'click .time-tracker-custom-submit'       : 'submitCustom',
       'click .custom-time-modal-toggle'         : function(){ this.$('.custom-time-modal').modal('show'); }
     },
 
-    onActivated: function(data){
+    activate: function(data){
       this.doneLoading = false;
 
       this.hideOrDisableFields();
@@ -107,6 +108,8 @@
           this.counterStarted = true;
         }
 
+        this.uniqueID = this._generateUniqueID();
+
         services.appsTray().show();
 
         this.baseHistory = this._historyField() || '';
@@ -119,7 +122,8 @@
           can_submit_both_time: this.setting("can_submit_custom_time") && this.setting("can_submit_current_time"),
           custom_time: this._customTimeDefault(),
           custom_time_format: this._customTimeFormat(),
-          total_time: this._prettyTotalTime(TimeHelper.minutesToMs(ceiledBaseTime))
+          total_time: this._prettyTotalTime(TimeHelper.minutesToMs(ceiledBaseTime)),
+          unique_id: this.uniqueID
         });
 
         this.setDefaults();
@@ -170,7 +174,7 @@
 
     setTimeLoop: function(self){
       return setInterval(function(){
-        if (_.isEmpty(self.$('span.time'))){
+        if (_.isEmpty(self.ticket()) || _.isEmpty(self.$('span.time-'+self.uniqueID))){
           clearInterval(self.timeLoopID);
         } else {
           var ms = self.setWorkedTime();
@@ -190,7 +194,7 @@
       var ms = this._elapsedTime();
       var elapsedTime = TimeHelper.msToObject(ms);
 
-      this.$('span.time').html(TimeHelper.prettyTime(elapsedTime));
+      this.$('span.time-'+this.uniqueID).html(TimeHelper.prettyTime(elapsedTime));
 
       return ms;
     },
@@ -228,6 +232,13 @@
     },
     _prettyTotalTime: function(time){
       return TimeHelper.prettyTime(TimeHelper.msToObject(time)).slice(0,5);
+    },
+    _generateUniqueID: function(){
+      return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
+
+        return v.toString(16);
+      });
     },
     _customTimeDefault: function(){
       return _.map(this._customTimeFormat().split(':'),
