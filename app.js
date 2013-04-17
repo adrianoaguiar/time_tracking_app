@@ -158,7 +158,7 @@
     submitCustom: function(){
       this.addTime(TimeHelper.humanToMs(this.$('div.modal-body input').val()));
       this.disableSaveOnTimeout(this);
-      this.$('#customTimeModal').modal('hide');
+      this.$('.customTimeModal').modal('hide');
     },
 
     disableSaveOnTimeout: function(self){
