@@ -31,7 +31,7 @@
               <a class="time-tracker-submit">{{t "current_time"}}</a>
             </li>
             <li>
-              <a href=".customTimeModal" role="button" data-toggle="modal">{{t "custom_time"}}</a>
+              <a class="custom-time-modal-toggle">{{t "custom_time"}}</a>
             </li>
           </ul>
         </div>
@@ -39,7 +39,7 @@
       {{else}}
       <br/>
       {{#if can_submit_custom_time}}
-        <a href=".customTimeModal" role="button" data-toggle="modal" class="btn-large btn-success">{{t "submit"}} {{t "custom_time"}}</a>
+        <a class="btn-large btn-success custom-time-modal-toggle">{{t "submit"}} {{t "custom_time"}}</a>
       {{else}}
         <a class="time-tracker-submit btn-large btn-success">{{t "submit"}} {{t "current_time"}}</a>
       {{/if}}
@@ -48,7 +48,7 @@
   </div>
 </div>
 
-<div class="modal hide fade customTimeModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal hide fade custom-time-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
     <h3>{{t "modal_header"}} ({{custom_time_format}})</h3>

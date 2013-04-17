@@ -75,7 +75,8 @@
       'app.activated'                           : 'onActivated',
       'ticket.requester.email.changed'          : 'loadIfDataReady',
       'click .time-tracker-submit'              : 'submit',
-      'click .time-tracker-custom-submit'       : 'submitCustom'
+      'click .time-tracker-custom-submit'       : 'submitCustom',
+      'click .custom-time-modal-toggle'         : function(){ this.$('.custom-time-modal').modal('show'); }
     },
 
     onActivated: function(data){
@@ -158,7 +159,7 @@
     submitCustom: function(){
       this.addTime(TimeHelper.humanToMs(this.$('div.modal-body input').val()));
       this.disableSaveOnTimeout(this);
-      this.$('.customTimeModal').modal('hide');
+      this.$('.custom-time-modal').modal('hide');
     },
 
     disableSaveOnTimeout: function(self){
