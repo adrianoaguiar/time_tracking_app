@@ -174,9 +174,10 @@
 
     setTimeLoop: function(self){
       return setInterval(function(){
-        if (_.isEmpty(self.ticket()) || _.isEmpty(self.$('span.time-'+self.uniqueID))){
-          clearInterval(self.timeLoopID);
-        } else {
+
+        if (self.ticket() &&
+            _.isFinite(self.ticket().id())){
+
           var ms = self.setWorkedTime();
 
           if (ms > self._thresholdToStart() &&
@@ -185,6 +186,9 @@
             self.$('.submit-container').show();
             self.thresholdReached = true;
           }
+        } else {
+          console.log("CLOSED");
+          clearInterval(self.timeLoopID);
         }
       }, 1000);
     },
