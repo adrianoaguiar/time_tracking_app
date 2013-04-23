@@ -47,7 +47,7 @@
 
     setDefaults: function(){
       _.each(['time_mm', 'time_ms'], function(field){
-        if (_.isEmpty(this.ticket().customField("custom_field_"+this.setting(field)))){
+        if (!_.isFinite(this.ticket().customField("custom_field_"+this.setting(field)))){
           this.ticket().customField("custom_field_"+this.setting(field), 0);
         }
       }, this);
@@ -66,7 +66,7 @@
         if (self.ticket() &&
            _.isFinite(self.ticket().id())){
           var ms = Number(self.ticket().customField("custom_field_"+self.setting('time_ms')));
-          var new_ms = ms + this.INTERVAL;
+          var new_ms = ms + self.INTERVAL;
 
           self.ticket().customField('custom_field_' +
                                     self.setting('time_ms'), new_ms);
@@ -75,7 +75,7 @@
         } else {
           clearInterval(self.timeLoopID);
         }
-      }, this.INTERVAL);
+      }, self.INTERVAL);
     }
   };
 }());
