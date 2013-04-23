@@ -47,7 +47,7 @@
 
     setDefaults: function(){
       _.each(['time_mm', 'time_ms'], function(field){
-        if (!_.isFinite(this.ticket().customField("custom_field_"+this.setting(field)))){
+        if (!_.isFinite(Number(this.ticket().customField("custom_field_"+this.setting(field))))){
           this.ticket().customField("custom_field_"+this.setting(field), 0);
         }
       }, this);
