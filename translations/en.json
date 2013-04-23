@@ -1,52 +1,18 @@
 {
   "app": {
     "parameters" : {
-      "totaltime": {
-        "label": "Time Field",
-        "helpText": "Place the text field ID to store the total time in"
+      "time_mm": {
+        "label": "Time in Minutes",
+        "helpText": "Place the number custom field ID to store the total time in Minutes (ceiled)"
       },
-      "timehistory": {
-        "label" : "History Field",
-        "helpText": "Place the multi-line text field ID to store history of recorded time"
-      },
-      "start_threshold": {
-        "label": "Treshold Field",
-        "helpText": "Seconds to wait before blocking the Save button (default: 15)"
-      },
-      "date_format": {
-        "label": "Date Format",
-        "helpText": "Please enter one of the following date formats: dd-mm-yyyy, mm-dd-yyyy or yyyy-mm-dd"
-      },
-      "block_save_interval": {
-        "label": "Lock Interval",
-        "helpText": "Seconds to wait after a time submission before blocking the Save button (default: 5)"
-      },
-      "active_on_new": {
-        "label": "Active on new ticket?",
-        "helpText": "If checked, you will be able to register time for 'New' ticket"
-      },
-      "can_submit_custom_time": {
-        "label": "Agent can submit custom time?"
-      },
-      "can_submit_current_time": {
-        "label": "Agent can submit calculated time?"
-      },
-      "custom_time_format": {
-        "label": "Custom Time Format",
-        "helpText": "Choose a format for time submission. HH:MM or MM (default: HH:MM)."
+      "time_ms": {
+        "label" : "Time in Milliseconds",
+        "helpText": "Place the number custom field ID to store the total time in Milliseconds"
       }
     },
     "description":  "This is a simple time tracker that counts the time a ticket is open and requires Agents to submit this time before letting them them update ticket. ",
     "name":         "Time Tracking"
   },
 
-  "total_time_spent": "Total time spent on ticket",
-  "settings_error": "Please check the app settings to allow the agent to submit custom or actual time.",
-  "warning": "Have you entered your comments?",
-  "submit": "Submit",
-   "current_time": "Actual Time",
-  "custom_time": "Custom Time",
-  "modal_header": "Enter custom time",
-  "modal_save": "Save Time",
-  "modal_close": "Close"
+  "settings_error": "Please check the app settings to allow the agent to submit custom or actual time."
 }

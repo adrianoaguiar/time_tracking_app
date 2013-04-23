@@ -1,34 +1,9 @@
-.bold {
-  font-weight: bold;
-}
-
-.big {
-  font-size: 150%;
-}
-
-.text-center {
-  text-align: center;
-}
-
-.btn-group a {
-    display:inline-block;
-}
-
-.padded {
-  padding-top: 8px;
-}
-
-.btn-group-wrap {
-    text-align: center;
-}
-
-div.total_time {
-  padding-top: 5px;
-}
-
-div.btn-group {
-    margin: 0 auto; 
-    text-align: center;
-    width: inherit;
-    display: inline-block;
+.btn-block {
+  display: block;
+  width: 100%;
+  padding-right: 0;
+  padding-left: 0;
+  -webkit-box-sizing: border-box;
+     -moz-box-sizing: border-box;
+          box-sizing: border-box;
 }

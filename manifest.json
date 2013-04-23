@@ -6,42 +6,14 @@
 
   "parameters": [
     {
-      "name": "totaltime",
+      "name": "time_mm",
       "type": "text",
       "required": true
     },
     {
-      "name": "timehistory",
+      "name": "time_ms",
       "type": "text",
       "required": true
-    },
-    {
-      "name": "start_threshold",
-      "type": "number"
-    },
-    {
-      "name": "date_format",
-      "type": "text"
-    },
-    {
-      "name": "block_save_interval",
-      "type": "number"
-    },
-    {
-      "name": "active_on_new",
-      "type": "checkbox"
-    },
-    {
-      "name": "can_submit_custom_time",
-      "type": "checkbox"
-    },
-    {
-      "name": "can_submit_current_time",
-      "type": "checkbox"
-    },
-    {
-      "name": "custom_time_format",
-      "type": "text"
     }
   ],
 
