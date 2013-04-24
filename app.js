@@ -70,6 +70,7 @@
     baseHistory: 0,
     baseTime: 0,
     counterStarted: false,
+    thresholdReached: false,
     uniqueID: '',
 
     events: {
@@ -104,6 +105,7 @@
           return this.displayError();
 
         if (!this.counterStarted){
+          this.enableSave();
           this.startCounter();
           this.counterStarted = true;
         }
@@ -181,16 +183,24 @@
           var ms = self.setWorkedTime();
 
           if (ms > self._thresholdToStart() &&
-              _.isUndefined(self.thresholdReached)){
+              !self.thresholdReached){
             self.disableSave();
             self.$('.submit-container').show();
             self.thresholdReached = true;
           }
         } else {
-          console.log("CLOSED");
-          clearInterval(self.timeLoopID);
+          self.destroy();
         }
       }, 1000);
+    },
+
+    destroy: function(){
+      this.counterStarted = false;
+      clearInterval(this.timeLoopID);
+      this.timeLoopID = null;
+      this.enableSave();
+      this.thresholdReached = false;
+      this.switchTo('loading');
     },
 
     // Returns worded time as ms
@@ -209,10 +219,10 @@
 
       this.setWorkedTime();
 
-      if (_.isUndefined(this.thresholdReached)){
-        this.$('.submit-container').hide();
-      } else{
+      if (this.thresholdReached){
         this.$('.submit-container').show();
+      } else{
+        this.$('.submit-container').hide();
       }
     },
     // time == ms
@@ -252,10 +262,10 @@
       return this.setting('custom_time_format') || "HH:MM";
     },
     _thresholdToStart: function(){
-      return ((parseInt(this.settings.start_threshold, 0) || 15) * 1000);
+      return (Number(this.settings.start_threshold)|15) * 1000;
     },
     _disableSaveInterval: function(){
-      return ((parseInt(this.settings.block_save_interval, 0) || 5) * 1000);
+      return (Number(this.settings.block_save_interval)|5) * 1000;
     },
     _formattedDate: function(format){
       var dateString = format || this._dateFormat(),
