@@ -19,8 +19,14 @@
 
     activate: function(data){
       this.doneLoading = false;
-
+      this.hideTimeFields();
       this.initializeIfReady();
+    },
+
+    hideTimeFields: function(){
+      this.eachTimeField(function(field){
+        this.ticketFields(field).hide();
+      });
     },
 
     initializeIfReady: function(){
@@ -46,9 +52,9 @@
     },
 
     setDefaults: function(){
-      _.each(['time_mm', 'time_ms'], function(field){
-        if (!_.isFinite(Number(this.ticket().customField("custom_field_"+this.setting(field))))){
-          this.ticket().customField("custom_field_"+this.setting(field), 0);
+      this.eachTimeField(function(field){
+        if (!_.isFinite(Number(this.ticket().customField(field)))){
+          this.ticket().customField(field, 0);
         }
       }, this);
     },
@@ -71,11 +77,17 @@
           self.ticket().customField('custom_field_' +
                                     self.setting('time_ms'), new_ms);
           self.ticket().customField('custom_field_' +
-                                    self.setting('time_mm'), Math.ceil(new_ms / 60000));
+                                    self.setting('time_mn'), Math.ceil(new_ms / 60000));
         } else {
           clearInterval(self.timeLoopID);
         }
       }, self.INTERVAL);
+    },
+
+    eachTimeField: function(iterator){
+      _.each(['time_mn', 'time_ms'], function(field){
+        iterator.call(this, 'custom_field_'+this.setting(field));
+      }, this);
     }
   };
 }());

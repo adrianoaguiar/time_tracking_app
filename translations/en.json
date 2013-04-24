@@ -1,7 +1,7 @@
 {
   "app": {
     "parameters" : {
-      "time_mm": {
+      "time_mn": {
         "label": "Time in Minutes",
         "helpText": "Place the number custom field ID to store the total time in Minutes (ceiled)"
       },

@@ -6,7 +6,7 @@
 
   "parameters": [
     {
-      "name": "time_mm",
+      "name": "time_mn",
       "type": "text",
       "required": true
     },
