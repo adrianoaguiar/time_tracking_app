@@ -2,4 +2,4 @@
   <span class="logo"/>
   <h3>{{setting "title"}}</h3>
 </header>
-<section data-main />
+<section data-main style="text-align:center;"/>
