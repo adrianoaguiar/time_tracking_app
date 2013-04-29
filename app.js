@@ -80,6 +80,8 @@
                                     self.setting('time_mn'), Math.ceil(new_ms / 60000));
         } else {
           clearInterval(self.timeLoopID);
+          self.timeLoopID = null;
+          self.counterStarted = false;
         }
       }, self.INTERVAL);
     },
