@@ -96,10 +96,8 @@
     },
 
     loadIfDataReady: function(){
-      if (!this.doneLoading && this.ticket() &&
-          this.ticket().id() &&
-          this.ticket().requester() &&
-          this.ticket().requester().email()) {
+      if (!this.doneLoading &&
+          this.ticket()) {
 
         if (this.shouldNotRun())
           return this.displayError();
@@ -178,7 +176,7 @@
       return setInterval(function(){
 
         if (self.ticket() &&
-            _.isFinite(self.ticket().id())){
+            self.ticket().status()){
 
           var ms = self.setWorkedTime();
 
