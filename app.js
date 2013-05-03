@@ -47,8 +47,7 @@
 
     isReady: function(){
       return (!this.doneLoading && this.ticket() &&
-              this.ticket().status() != 'closed' &&
-              this.ticket().requester() && this.ticket().requester().email());
+              this.ticket().status() != 'closed');
     },
 
     setDefaults: function(){
@@ -70,7 +69,7 @@
       return setInterval(function(){
         if (self.paused) { return; }
         if (self.ticket() &&
-           _.isFinite(self.ticket().id())){
+           self.ticket().status()){
           var ms = Number(self.ticket().customField("custom_field_"+self.setting('time_ms')));
           var new_ms = ms + self.INTERVAL;
 
