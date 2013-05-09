@@ -18,8 +18,9 @@
     },
 
     activate: function(data){
-      this.doneLoading = false;
-      this.hideTimeFields();
+      if (data.firstLoad){
+        this.hideTimeFields();
+      }
       this.initializeIfReady();
     },
 
@@ -32,7 +33,6 @@
     initializeIfReady: function(){
       if (this.isReady()) {
         this.setDefaults();
-
         if (!this.counterStarted){
           this.startCounter();
         }
@@ -53,7 +53,7 @@
     setDefaults: function(){
       this.eachTimeField(function(field){
         if (!_.isFinite(Number(this.ticket().customField(field)))){
-          this.ticket().customField(field, 0);
+          this.ticket().customField(field, "0");
         }
       }, this);
     },
@@ -69,7 +69,7 @@
       return setInterval(function(){
         if (self.paused) { return; }
         if (self.ticket() &&
-           self.ticket().status()){
+            self.ticket().status()){
           var ms = Number(self.ticket().customField("custom_field_"+self.setting('time_ms')));
           var new_ms = ms + self.INTERVAL;
 
