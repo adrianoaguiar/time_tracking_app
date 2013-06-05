@@ -5,22 +5,20 @@
     paused: false,
     events: {
       'app.activated'                           : 'activate',
+      'app.deactivated'                         : 'pause',
       'ticket.requester.email.changed'          : 'initializeIfReady',
-      'click .pause'                            : function(){
-        this.switchTo('paused');
-        this.paused = true;
-      },
-
-      'click .resume'                           : function(){
-        this.switchTo('show');
-        this.paused = false;
-      }
+      'click .pause'                            : 'pause',
+      'click .resume'                           : 'resume'
     },
 
     activate: function(data){
       if (data.firstLoad){
         this.hideTimeFields();
       }
+
+      if (this.paused)
+        return this.resume();
+
       this.initializeIfReady();
     },
 
@@ -63,6 +61,16 @@
         this.timeLoopID = this.setTimeLoop(this);
         this.counterStarted = true;
       }
+    },
+
+    pause: function(){
+      this.switchTo('paused');
+      this.paused = true;
+    },
+
+    resume: function(){
+      this.switchTo('show');
+      this.paused = false;
     },
 
     setTimeLoop: function(self){
