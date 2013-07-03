@@ -97,7 +97,8 @@
 
     loadIfDataReady: function(){
       if (!this.doneLoading &&
-          this.ticket()) {
+          this.ticket() &&
+          !_.isUndefined(this._historyField())) {
 
         if (this.shouldNotRun())
           return this.displayError();
