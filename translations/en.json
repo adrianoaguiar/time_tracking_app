@@ -10,7 +10,7 @@
         "helpText": "Place the multi-line text field ID to store history of recorded time"
       },
       "start_threshold": {
-        "label": "Treshold Field",
+        "label": "Threshold Field",
         "helpText": "Seconds to wait before blocking the Save button (default: 15)"
       },
       "date_format": {
