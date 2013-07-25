@@ -104,8 +104,8 @@
     },
 
     hideOrDisableFields: function(){
-      this._timeFieldUI() && this._timeFieldUI().hide() && this._timeFieldUI().disable();
-      this._historyFieldUI() && this._historyFieldUI().disable();
+      if (this._timeFieldUI()){ this._timeFieldUI().hide(); this._timeFieldUI().disable(); }
+      if (this._historyFieldUI()){ this._historyFieldUI().disable(); }
     },
 
     loadIfDataReady: function(){
