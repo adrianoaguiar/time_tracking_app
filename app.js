@@ -5,6 +5,7 @@
     paused: false,
     events: {
       'app.activated'                           : 'activate',
+      'ticket.form.id.changed'                  : 'hideTimeFields',
       'app.deactivated'                         : 'pause',
       'ticket.requester.email.changed'          : 'initializeIfReady',
       'click .pause'                            : 'pause',
@@ -12,9 +13,7 @@
     },
 
     activate: function(data){
-      if (data.firstLoad){
-        this.hideTimeFields();
-      }
+      this.hideTimeFields();
 
       if (this.paused)
         return this.resume();
@@ -24,7 +23,9 @@
 
     hideTimeFields: function(){
       this.eachTimeField(function(field){
-        this.ticketFields(field).hide();
+        if (this.ticketFields(field)) {
+          this.ticketFields(field).hide();
+        }
       });
     },
 
@@ -44,7 +45,7 @@
     },
 
     isReady: function(){
-      return (!this.doneLoading && this.ticket() &&
+      return (!this.doneLoading &&
               this.ticket().status() != 'closed');
     },
 
