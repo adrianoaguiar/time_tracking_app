@@ -75,12 +75,26 @@
 
     events: {
       'app.activated'                           : 'activate',
+      'ticket.form.id.changed'                  : _.debounce(function(){ this.hideOrDisableFields(); }),
       'ticket.requester.email.changed'          : 'loadIfDataReady',
       'click .time-tracker-submit'              : 'submit',
       'click .time-tracker-custom-submit'       : 'submitCustom',
       'click .custom-time-modal-toggle'         : function(){ this.$('.custom-time-modal').modal('show'); }
     },
 
+    requests: {
+      updateTicket: function(attributes){
+        return {
+          url: '/api/v2/tickets/' + this.ticket().id() + '.json',
+          type: 'PUT',
+          dataType: 'json',
+          data: JSON.stringify(attributes),
+          contentType: 'application/json',
+          proxy_v2: true,
+          processData: false
+        };
+      }
+    },
     activate: function(data){
       this.doneLoading = false;
 
@@ -90,9 +104,8 @@
     },
 
     hideOrDisableFields: function(){
-      this._timeFieldUI().hide();
-      this._timeFieldUI().disable();
-      this._historyFieldUI().disable();
+      this._timeFieldUI() && this._timeFieldUI().hide() && this._timeFieldUI().disable();
+      this._historyFieldUI() && this._historyFieldUI().disable();
     },
 
     loadIfDataReady: function(){
@@ -231,12 +244,15 @@
       var newTotalTimeInMinutes = Math.ceil(TimeHelper.msToMinutes(this.calculateNewTime(time)));
       var newHistory = this.baseHistory + '\n' +  this.currentUser().name() +
         ',' + newTime + ',' + this._formattedDate('yyyy-mm-dd') + '';
+      var attributes = { ticket: { custom_fields: [] }};
 
       this.ticket().customField(this._historyFieldLabel(), newHistory);
+      attributes.ticket.custom_fields.push({ id: this.settings.timehistory, value: newHistory });
       this.ticket().customField(this._timeFieldLabel(), newTotalTimeInMinutes);
+      attributes.ticket.custom_fields.push({ id: this.settings.totaltime, value: newTotalTimeInMinutes });
 
       this.$('span.total_time').html(this._prettyTotalTime(TimeHelper.minutesToMs(newTotalTimeInMinutes)));
-
+      this.ajax('updateTicket', attributes);
       this.enableSave();
     },
 
