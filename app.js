@@ -3,13 +3,29 @@
     INTERVAL: 2000,
     counterStarted: false,
     paused: false,
+
     events: {
       'app.activated'                           : 'activate',
       'ticket.form.id.changed'                  : 'hideTimeFields',
+      'ticket.save'                             : 'saveTimeFields',
       'app.deactivated'                         : 'pause',
       'ticket.requester.email.changed'          : 'initializeIfReady',
       'click .pause'                            : 'pause',
       'click .resume'                           : 'resume'
+    },
+
+    requests: {
+      updateTicket: function(attributes){
+        return {
+          url: '/api/v2/tickets/' + this.ticket().id() + '.json',
+          type: 'PUT',
+          dataType: 'json',
+          data: JSON.stringify(attributes),
+          contentType: 'application/json',
+          proxy_v2: true,
+          processData: false
+        };
+      }
     },
 
     activate: function(data){
@@ -22,16 +38,35 @@
     },
 
     hideTimeFields: function(){
-      this.eachTimeField(function(field){
-        if (this.ticketFields(field)) {
-          this.ticketFields(field).hide();
-        }
+      var self = this;
+
+      _.defer(function(){
+        self.eachTimeField(function(field){
+          if (self.ticketFields(field)) {
+            self.ticketFields(field).hide();
+          }
+        });
       });
+    },
+
+    saveTimeFields: function(){
+      if (this.ticket().id()) {
+        var fields = [];
+
+        this.eachTimeField(function(label, id){
+          fields.push({ id: id, value: this.ticket().customField(label)});
+        });
+
+        this.ajax('updateTicket', { ticket: { custom_fields: fields } });
+      }
+
+      return true;
     },
 
     initializeIfReady: function(){
       if (this.isReady()) {
         this.setDefaults();
+
         if (!this.counterStarted){
           this.startCounter();
         }
@@ -96,7 +131,9 @@
 
     eachTimeField: function(iterator){
       _.each(['time_mn', 'time_ms'], function(field){
-        iterator.call(this, 'custom_field_'+this.setting(field));
+        var id = this.setting(field);
+
+        iterator.call(this, 'custom_field_' + id, id);
       }, this);
     }
   };
