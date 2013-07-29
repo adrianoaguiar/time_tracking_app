@@ -75,7 +75,7 @@
 
     events: {
       'app.activated'                           : 'activate',
-      'ticket.form.id.changed'                  : _.debounce(function(){ this.hideOrDisableFields(); }),
+      'ticket.form.id.changed'                  : _.defer(function(){ this.hideOrDisableFields(); }),
       'ticket.requester.email.changed'          : 'loadIfDataReady',
       'click .time-tracker-submit'              : 'submit',
       'click .time-tracker-custom-submit'       : 'submitCustom',
@@ -110,8 +110,7 @@
 
     loadIfDataReady: function(){
       if (!this.doneLoading &&
-          this.ticket() &&
-          !_.isUndefined(this._historyField())) {
+          this.ticket()) {
 
         if (this.shouldNotRun())
           return this.displayError();
@@ -194,7 +193,7 @@
 
           var ms = self.setWorkedTime();
 
-          if (ms > self._thresholdToStart() &&
+          if (ms >= self._thresholdToStart() &&
               !self.thresholdReached){
             self.disableSave();
             self.$('.submit-container').show();
@@ -277,10 +276,10 @@
       return this.setting('custom_time_format') || "HH:MM";
     },
     _thresholdToStart: function(){
-      return (Number(this.settings.start_threshold)|15) * 1000;
+      return (Number(this.settings.start_threshold) || 15) * 1000;
     },
     _disableSaveInterval: function(){
-      return (Number(this.settings.block_save_interval)|5) * 1000;
+      return (Number(this.settings.block_save_interval) || 5) * 1000;
     },
     _formattedDate: function(format){
       var dateString = format || this._dateFormat(),
