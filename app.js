@@ -75,7 +75,7 @@
 
     events: {
       'app.activated'                           : 'activate',
-      'ticket.form.id.changed'                  : _.defer(function(){ this.hideOrDisableFields(); }),
+      'ticket.form.id.changed'                  : function(){ _.defer(this.hideOrDisableFields()); },
       'ticket.requester.email.changed'          : 'loadIfDataReady',
       'click .time-tracker-submit'              : 'submit',
       'click .time-tracker-custom-submit'       : 'submitCustom',
@@ -98,7 +98,7 @@
     activate: function(data){
       this.doneLoading = false;
 
-      this.hideOrDisableFields();
+      _.defer(this.hideOrDisableFields());
 
       this.loadIfDataReady();
     },
