@@ -56,8 +56,9 @@
       if (_.isEmpty(history))
         return 0;
 
-      return _.reduce(history.match(/\d{2}:\d{2}:\d{2}/g),
-                     function(memo,time){
+      return _.reduce(history.split('\n'),
+                     function(memo,line){
+                       var time = line.match(/\d{2}:\d{2}:\d{2}/g)[0];
                        return memo + this.humanToMs(time);
                      }, 0, this);
     }
@@ -75,7 +76,7 @@
 
     events: {
       'app.activated'                           : 'activate',
-      'ticket.form.id.changed'                  : function(){ _.defer(this.hideOrDisableFields()); },
+      'ticket.form.id.changed'                  : function(){ this.hideOrDisableFields(); },
       'ticket.requester.email.changed'          : 'loadIfDataReady',
       'click .time-tracker-submit'              : 'submit',
       'click .time-tracker-custom-submit'       : 'submitCustom',
@@ -95,17 +96,22 @@
         };
       }
     },
+
     activate: function(data){
       this.doneLoading = false;
 
-      _.defer(this.hideOrDisableFields());
+      this.hideOrDisableFields();
 
       this.loadIfDataReady();
     },
 
     hideOrDisableFields: function(){
-      if (this._timeFieldUI()){ this._timeFieldUI().hide(); this._timeFieldUI().disable(); }
-      if (this._historyFieldUI()){ this._historyFieldUI().disable(); }
+      var self = this;
+
+      _.defer(function(){
+        if (self._timeFieldUI()){ self._timeFieldUI().hide(); self._timeFieldUI().disable(); }
+        if (self._historyFieldUI()){ self._historyFieldUI().disable(); }
+      });
     },
 
     loadIfDataReady: function(){
@@ -241,10 +247,11 @@
       var newTime = TimeHelper.prettyTime(TimeHelper.msToObject(time));
       // We ceil as requested by toby/Max
       var newTotalTimeInMinutes = Math.ceil(TimeHelper.msToMinutes(this.calculateNewTime(time)));
-      var newHistory = this.baseHistory + '\n' +  this.currentUser().name() +
-        ',' + newTime + ',' + this._formattedDate('yyyy-mm-dd') + '';
-      var attributes = { ticket: { custom_fields: [] }};
+      var newHistory = _.isEmpty(this.baseHistory) ? this.baseHistory : this.baseHistory + '\n';
+      newHistory +=  this.currentUser().name() +
+        ', ' + newTime + ', ' + this._formattedDate(this.setting('history_timestamp_format'));
 
+      var attributes = { ticket: { custom_fields: [] }};
       this.ticket().customField(this._historyFieldLabel(), newHistory);
       attributes.ticket.custom_fields.push({ id: this.settings.timehistory, value: newHistory });
       this.ticket().customField(this._timeFieldLabel(), newTotalTimeInMinutes);
@@ -287,8 +294,12 @@
 
       dateString = dateString.replace('dd', TimeHelper.addSignificantZero(date.getDate()));
       dateString = dateString.replace('mm', TimeHelper.addSignificantZero(date.getMonth() + 1));
+      dateString = dateString.replace('yyyy', date.getFullYear());
+      dateString = dateString.replace('HH', TimeHelper.addSignificantZero(date.getHours()));
+      dateString = dateString.replace('MM', TimeHelper.addSignificantZero(date.getMinutes()));
+      dateString = dateString.replace('SS', TimeHelper.addSignificantZero(date.getSeconds()));
 
-      return dateString.replace('yyyy', date.getFullYear());
+      return dateString;
     },
     _elapsedTime: function(){
       return new Date() - this.startedTime;

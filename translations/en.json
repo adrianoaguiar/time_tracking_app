@@ -17,6 +17,10 @@
         "label": "Date Format",
         "helpText": "Please enter one of the following date formats: dd-mm-yyyy, mm-dd-yyyy or yyyy-mm-dd"
       },
+      "history_timestamp_format": {
+        "label": "Hisory Timestamp Format",
+        "helpText": "The format that will be used to format the timestamp when a time is added (default: yyyy-mm-dd) yyyy=year, mm=month, dd=day, HH=hours, MM=minutes, SS=seconds"
+      },
       "block_save_interval": {
         "label": "Lock Interval",
         "helpText": "Seconds to wait after a time submission before blocking the Save button (default: 5)"
