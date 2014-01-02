@@ -35,3 +35,6 @@ Before moving onto the next step, you should have created two new fields, ‘Tot
  * Custom Time Format: enter HH:MM or MM depending on the time format you would like to use.
 
 5. Click “Install” to complete the setup and then refresh your browser. You can now start using the app.
+
+
+By downloading this app, you are agreeing to our [terms and conditions](https://github.com/zendesklabs/wiki/wiki/Terms-and-Conditions)
