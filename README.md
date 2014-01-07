@@ -1,4 +1,8 @@
-# What does the app do?
+# Time Tracking App
+
+This App will help you track time spent by your agents on tickets automatically or manually!
+
+## What does the app do?
 
 Time tracking should be simple. You’ve got enough work to do so you shouldn’t have to keep an eye on the clock too. 
 
@@ -6,13 +10,13 @@ With this app, when you start working on a ticket the timers starts, and when yo
 
 The total amount of time spent on a ticket is saved so you can report on this with our Advanced Analytics reporting. There is also a log field so you can easily see how much time each agent added and when they added it.
 
-# How to use the app:
+## How to use the app:
 
 1. Once you’ve installed the app, when you’re viewing a ticket, click on the ‘Apps’ button in the top right hand corner. You’ll then see the app and the timer will show.
 2. As you’re working on a ticket, the timer will continue to run. When you’re ready to submit your time, click on the app’s ‘Submit’ button. If you’ve enabled the setting that allows agents to enter a custom time, the submit button will be a dropdown, allowing you to choose between ‘Actual time’ and ‘Custom time’.
 3. Once the entry has been saved, it will be added to the field that is recording the total time spent on a ticket, and the entry will be included in the time log field. You can continue to work on the ticket or submit your response to the requester by clicking on the ticket ‘Submit’ button.
 
-# How to install the app:
+## How to install the app:
 
 1. Choose whether you would like to record the time in HH:MM or MM format.
 For example, 1 hour 45 minutes in HH:MM would be 01:45 and 105 in MM.
