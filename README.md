@@ -2,6 +2,8 @@
 
 # Time Tracking App
 
+## Description
+
 This App will help you track time spent by your agents on tickets automatically or manually!
 
 ## What does the app do?
@@ -44,3 +46,8 @@ Before moving onto the next step, you should have created two new fields, ‘Tot
 
 
 By downloading this app, you are agreeing to our [terms and conditions](https://github.com/zendesklabs/wiki/wiki/Terms-and-Conditions)
+
+## Screenshot(s):
+![screenshot-1](https://d1eipm3vz40hy0.cloudfront.net/images/p-apps-marketplace/apps/35111/screenshot-1.png)
+![screenshot-2](https://d1eipm3vz40hy0.cloudfront.net/images/p-apps-marketplace/apps/35111/screenshot-2.png)
+![screenshot-3](https://d1eipm3vz40hy0.cloudfront.net/images/p-apps-marketplace/apps/35111/screenshot-3.png)
